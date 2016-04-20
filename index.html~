@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SVG Demo</title>
+  </head>
+  <body>
+    <svg height="500" width="500" style="border: 1px solid;">
+      <image id="vimage" x="250" y="250" width="12.5%" height="12.5%" xlink:href="logo_dvd.jpg" />
+    </svg>
+    <button id="startScreen">Start</button>
+    <button id="stopScreen">Stop</button>
+  </body>
+  <script src="svg.js"></script>
+</html>

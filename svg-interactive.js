@@ -65,4 +65,10 @@ stop_button.addEventListener("click", function() {
     going = false;
 });
 
+function circle(){
 
+    return {
+	bounce : start
+    };
+
+}
