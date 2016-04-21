@@ -4,7 +4,7 @@ var pic = document.getElementById('vimage');
 var going = false;
 var intervalID;
 
-var circle = function circle() {
+var circle = function circle(initX, initY) {
     return {
         draw_image : function(x, y) {
             var c = document.createElementNS(SVGNS, 'image');
@@ -15,8 +15,8 @@ var circle = function circle() {
             c.setAttributeNS(XLINKNS, 'href', "sharingan.png");
             pic.appendChild(c);
         },
-        curr_x : 250,
-        curr_y : 250,
+        curr_x : initX - 25,
+        curr_y : initY - 25,
         vx : (Math.round(Math.random() * 100) % 5) + 1,
         vy : (Math.round(Math.random() * 100) % 5) + 1,
         bounce : function() {
@@ -51,9 +51,9 @@ var bounce_all = function() {
 
 var stop_button = document.getElementById("stop");
 
-pic.addEventListener("click", function() {
+pic.addEventListener("click", function(e) {
     going = true;
-    var c = circle();
+    var c = circle(e.offsetX, e.offsetY);
     balls.push(c);
     c.bounce();
     if (balls.length == 1) {
