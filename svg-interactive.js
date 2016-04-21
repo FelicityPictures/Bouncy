@@ -1,80 +1,67 @@
 var SVGNS = "http://www.w3.org/2000/svg";
 var XLINKNS = "http://www.w3.org/1999/xlink";
+var pic = document.getElementById('vimage');
+var going = false;
+var intervalID;
 
 var circle = function circle() {
-    var intervalID;
-    var going = false;
-    var pic = document.getElementById('vimage');
-
-    var clear_all = function() {
-        var toDelete = pic.children;
-        for (var i = toDelete.length - 1; i >= 0; i--) {
-            pic.removeChild(toDelete[i]);
+    return {
+        draw_image : function(x, y) {
+            var c = document.createElementNS(SVGNS, 'image');
+            c.setAttribute('x', x);
+            c.setAttribute('y', y);
+            c.setAttribute('width', 50);
+            c.setAttribute('height', 50);
+            c.setAttributeNS(XLINKNS, 'href', "sharingan.png");
+            pic.appendChild(c);
+        },
+        curr_x : 250,
+        curr_y : 250,
+        vx : (Math.round(Math.random() * 100) % 5) + 1,
+        vy : (Math.round(Math.random() * 100) % 5) + 1,
+        bounce : function() {
+            if (this.curr_x + this.vx + 50 >= 500 || this.curr_x + this.vx <= 0) {
+                this.vx *= -1;
+            }
+            if (this.curr_y + this.vy + 50 >= 500 || this.curr_y + this.vy <= 0) {
+                this.vy *= -1;
+            }
+            this.curr_x += this.vx;
+            this.curr_y += this.vy;
+            this.draw_image(this.curr_x, this.curr_y);
         }
     };
+};
 
-    var draw_image = function(x, y) {
-        var c = document.createElementNS(SVGNS, 'image');
-        c.setAttribute('x', x);
-        c.setAttribute('y', y);
-        c.setAttribute('width', 50);
-        c.setAttribute('height', 50);
-        c.setAttributeNS(XLINKNS, 'href', "sharingan.png");
-        pic.appendChild(c);
-    };
-
-    var bounce = function() {
-        var curr_x = 250;
-        var curr_y = 250;
-        var vx = (Math.round(Math.random() * 100) % 5) + 1;
-        var vy = (Math.round(Math.random() * 100) % 5) + 1;
-
-        clear_all();
-        draw_image(curr_x, curr_y);
-        var animate_code = function() {
-            var c = document.getElementsByTagName("image")[0];
-            curr_x = parseInt(c.getAttribute("x")) + vx;
-            curr_y = parseInt(c.getAttribute("y")) + vy;
-
-            if (curr_x + vx + 50 >= 500 || curr_x + vx <= 0) {
-                vx *= -1;
-            }
-            if (curr_y + vy + 50 >= 500 || curr_y + vy <= 0) {
-                vy *= -1;
-            }
-
-            clear_all();
-            draw_image(curr_x, curr_y);
-        };
-
-        intervalID = window.setInterval(animate_code, 16);
-    };
-
-    var stop = function stop(){
-        window.clearInterval(intervalID);
-        clear_all();
-        going = false;
-    };
-
-    return {
-        bounce : bounce,
-        stop : stop
-    };
-
-}
-
-var clicked = function clicked(e) {
-    if (!going && e.toElement == this) {
-        bounce();
-        going = true;
+var clear_all = function() {
+    var toDelete = pic.children;
+    for (var i = toDelete.length - 1; i >= 0; i--) {
+        pic.removeChild(toDelete[i]);
     }
 };
 
-var start_button = document.getElementById("start");
-var stop_button = document.getElementById("stop");
-var c = circle();
+var balls = [];
 
-start_button.addEventListener("click", c.bounce);
+var bounce_all = function() {
+    clear_all();
+    for (var i = 0; i < balls.length; i++) {
+        balls[i].bounce();
+    }
+}
+
+var stop_button = document.getElementById("stop");
+
+pic.addEventListener("click", function() {
+    going = true;
+    var c = circle();
+    balls.push(c);
+    c.bounce();
+    if (balls.length == 1) {
+        intervalID = window.setInterval(bounce_all, 16);
+    }
+});
+
 stop_button.addEventListener("click", function() {
-    c.stop();
+    going = false;
+    window.clearInterval(intervalID);
 });
