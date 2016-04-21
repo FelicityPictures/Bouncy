@@ -64,4 +64,6 @@ pic.addEventListener("click", function() {
 stop_button.addEventListener("click", function() {
     going = false;
     window.clearInterval(intervalID);
+    clear_all();
+    balls = [];
 });
