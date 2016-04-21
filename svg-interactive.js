@@ -1,10 +1,11 @@
 var SVGNS = "http://www.w3.org/2000/svg";
 var XLINKNS = "http://www.w3.org/1999/xlink";
 
-function circle(){
+var circle = function circle() {
     var intervalID;
     var going = false;
     var pic = document.getElementById('vimage');
+
     var clear_all = function() {
         var toDelete = pic.children;
         for (var i = toDelete.length - 1; i >= 0; i--) {
@@ -48,7 +49,7 @@ function circle(){
 
         intervalID = window.setInterval(animate_code, 16);
     };
-    
+
     var stop = function stop(){
         window.clearInterval(intervalID);
         clear_all();
@@ -56,12 +57,11 @@ function circle(){
     };
 
     return {
-	      bounce : bounce,
+        bounce : bounce,
         stop : stop
     };
 
 }
-
 
 var clicked = function clicked(e) {
     if (!going && e.toElement == this) {
@@ -69,8 +69,6 @@ var clicked = function clicked(e) {
         going = true;
     }
 };
-
-
 
 var start_button = document.getElementById("start");
 var stop_button = document.getElementById("stop");
