@@ -30,20 +30,25 @@ var circle = function circle(initX, initY) {
                 this.vy *= -1;
             }
             for(var i = 0; i < balls.length; i++){
-                if (this.curr_x + 25 + 25 > balls[i].curr_x &&
-                    this.curr_x < balls[i].curr_x + 25 + 25 &&
-                    this.curr_y + 25 + 25 > balls[i].curr_y &&
-                    this.curr_y < balls[i].curr_y + 25 + 25){
-                    //AABBs are overlapping
-                    distance = Math.sqrt(((this.curr_x - balls[i].curr_x) * (this.curr_x - balls[i].curr_x)) + ((this.curr_y - balls[i].curr_y) * (this.curr_y - balls[i].curr_y)));
-                    if (distance < 25 + 25){
-                        //balls have collided
-                        this.setvx(balls[i].vx);
-                        this.setvy(balls[i].vy);
-                        balls[i].setvx(2 * this.vx);
-                        balls[i].setvy(2 * this.vy);
-                    }
-                }   
+                if(this.curr_x != balls[i].curr_x &&
+                   this.curr_y != balls[i].curr_y){
+                    if (this.curr_x + 50 > balls[i].curr_x &&
+                        this.curr_x < balls[i].curr_x + 50 &&
+                        this.curr_y + 50 > balls[i].curr_y &&
+                        this.curr_y < balls[i].curr_y + 50){
+                        //AABBs are overlapping
+                        distance = Math.sqrt(((this.curr_x - balls[i].curr_x) * (this.curr_x - balls[i].curr_x)) + ((this.curr_y - balls[i].curr_y) * (this.curr_y - balls[i].curr_y)));
+                        if (distance < 25 + 25){
+                            //balls have collided
+                            var tempx = this.vx;
+                            var tempy = this.vy;
+                            this.setvx(balls[i].vx);
+                            this.setvy(balls[i].vy);
+                            balls[i].setvx(tempx);
+                            balls[i].setvy(tempy);
+                        }
+                    }   
+                }
             }
             this.curr_x += this.vx;
             this.curr_y += this.vy;
