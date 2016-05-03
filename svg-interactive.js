@@ -21,24 +21,32 @@ var circle = function circle(initX, initY) {
         vx : (Math.round(Math.random() * 100) % 5) + 1,
         vy : (Math.round(Math.random() * 100) % 5) + 1,
         bounce : function() {
-            if (this.curr_x + this.vx + 50 >= 500) {
-		this.vx = (this.vx < 0 ? -1 : 1) * (Math.round(Math.random() * 100) % 5 + 1);
-	    }
-	    if (this.curr_x + this.vx <= 0) {
-                this.vx = (this.vx < 0 ? 1 : -1) * (Math.round(Math.random() * 100) % 5 + 1);
+            if (this.curr_x + this.vx + 50 >= 500 ||
+                this.curr_x + this.vx <= 0) {
+                this.vx *= -1;
             }
             if (this.curr_y + this.vy + 50 >= 500 ||
                 this.curr_y + this.vy <= 0) {
-                this.vy = (this.vy < 0 ? 1 : -1) * (Math.round(Math.random() * 100) % 5 + 1);
+                this.vy *= -1;
             }
-            for (var i = 0; i < balls.length; i++){
-                if(this.curr_x != balls[i].curr_x && this.curr_y != balls[i].curr_y) {
-                   distance = Math.sqrt(((this.curr_x - balls[i].curr_x + this.vx) * (this.curr_x - balls[i].curr_x + this.vx)) + ((this.curr_y - balls[i].curr_y + this.vy) * (this.curr_y - balls[i].curr_y + this.vy)));
-                   if (distance < 25 + 25) {
-                       this.vx = (this.vx < 0 ? 1 : -1) * (Math.round(Math.random() * 100) % 5 + 1);
-                       this.vy = (this.vy < 0 ? 1 : -1) * (Math.round(Math.random() * 100) % 5 + 1);
-                       balls[i].vx = -balls[i].vx;
-                       balls[i].vy = -balls[i].vy;
+            for(var i = 0; i < balls.length; i++){
+                if(this.curr_x != balls[i].curr_x &&
+                   this.curr_y != balls[i].curr_y){
+                    if (this.curr_x + 50 > balls[i].curr_x &&
+                        this.curr_x < balls[i].curr_x + 50 &&
+                        this.curr_y + 50 > balls[i].curr_y &&
+                        this.curr_y < balls[i].curr_y + 50){
+                        //AABBs are overlapping
+                        distance = Math.sqrt(((this.curr_x - balls[i].curr_x) * (this.curr_x - balls[i].curr_x)) + ((this.curr_y - balls[i].curr_y) * (this.curr_y - balls[i].curr_y)));
+                        if (distance < 25 + 25){
+                            //balls have collided
+                            var tempx = this.vx;
+                            var tempy = this.vy;
+                            this.setvx(balls[i].vx);
+                            this.setvy(balls[i].vy);
+                            balls[i].setvx(tempx);
+                            balls[i].setvy(tempy);
+                        }
                     }   
                 }
             }
@@ -64,14 +72,9 @@ var clear_all = function() {
 
 var bounce_all = function() {
     clear_all();
-/*
     for (var i = 0; i < balls.length; i++) {
         balls[i].bounce();
     }
- */
-    balls.map(function(ball) {
-        ball.bounce();
-    });
 }
 
 var stop_button = document.getElementById("stop");
