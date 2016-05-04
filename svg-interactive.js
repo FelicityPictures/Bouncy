@@ -32,10 +32,10 @@ var circle = function circle(initX, initY) {
             for(var i = 0; i < balls.length; i++){
                 if(this.curr_x != balls[i].curr_x &&
                    this.curr_y != balls[i].curr_y){
-                    if (this.curr_x + 50 > balls[i].curr_x &&
-                        this.curr_x < balls[i].curr_x + 50 &&
-                        this.curr_y + 50 > balls[i].curr_y &&
-                        this.curr_y < balls[i].curr_y + 50){
+                    if (this.curr_x + 50 >= balls[i].curr_x &&
+                        this.curr_x <= balls[i].curr_x + 50 &&
+                        this.curr_y + 50 >= balls[i].curr_y &&
+                        this.curr_y <= balls[i].curr_y + 50){
                         //AABBs are overlapping
                         distance = Math.sqrt(((this.curr_x - balls[i].curr_x) * (this.curr_x - balls[i].curr_x)) + ((this.curr_y - balls[i].curr_y) * (this.curr_y - balls[i].curr_y)));
                         if (distance < 25 + 25){
@@ -79,11 +79,30 @@ var bounce_all = function() {
 
 var stop_button = document.getElementById("stop");
 
-pic.addEventListener("click", function(e) {
-    going = true;
-    var c = circle(e.offsetX, e.offsetY);
+var check = function(newX,newY){
+    var yes;
+    if(newX >= 450){
+        newX = 450;
+    }
+    if(newY >= 450){
+        newY = 450;
+    }
+    for(var i = 0; i < balls.length; i++){
+        if(newX >= balls[i].curr_x - 50 &&
+           newX <= balls[i].curr_x + 50 &&
+           newY >= balls[i].curr_y - 50 &&
+           newY <= balls[i].curr_y + 50){
+            return;
+        }
+    }
+    var c = circle(newX, newY);
     balls.push(c);
     c.bounce();
+}
+
+pic.addEventListener("click", function(e) {
+    going = true;
+    check(e.offsetX, e.offsetY);
     if (balls.length == 1) {
         intervalID = window.setInterval(bounce_all, 16);
     }
